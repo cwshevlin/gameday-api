@@ -5,7 +5,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Colin Shevlin"]
   spec.email         = ["cwshevlin@gmail.com"]
   spec.description   = %q{An API for processing MLB statistics and information.}
-  spec.summary       = %q{Abanico}
+  spec.summary       = %q{Abanico is a gem for baseball information. It takes the Gameday API and offers the statistics in an easy to digest way.}
   spec.homepage      = %q{https://github.com/cwshevlin/abanico}
 
   spec.files         = `git ls-files`.split($\)
