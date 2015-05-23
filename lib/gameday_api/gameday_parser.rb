@@ -259,60 +259,70 @@ module GamedayApi
 
   			existing_ab = AtBat.find(:first, :conditions=>"game_id=#{game.id} AND inning=#{atbat.attributes['inning']} AND number=#{atbat.attributes['num']}")
   			if !existing_ab
-  				at_bat_obj = AtBat.new
-  				at_bat_obj.inning = atbat.attributes['inning']
-  				at_bat_obj.number = atbat.attributes['num']
-  				at_bat_obj.ball = atbat.attributes['b']
-  				at_bat_obj.strike = atbat.attributes['s']
-  				at_bat_obj.out = atbat.attributes['o']
-  				at_bat_obj.batter_gd_id = atbat.attributes['batter']
-  				at_bat_obj.pitcher_gd_id = atbat.attributes['pitcher']
-  				at_bat_obj.stand = atbat.attributes['stand']
-  				at_bat_obj.description = atbat.attributes['des']
-  				at_bat_obj.event = atbat.attributes['event']
-  				at_bat_obj.brief_event = atbat.attributes['brief_event']
+          at_bat_obj = set_at_bat_obj_from_atbat(atbat)
   				at_bat_obj.batter_id = batter.id
   				at_bat_obj.pitcher_id = pitcher.id
   				at_bat_obj.game_id = game.id
   				at_bat_obj.save
 				
   				atbat.each_element do |pitch|
-  					pitch_obj = Pitch.new
-  					pitch_obj.at_bat_id = at_bat_obj.id
-  					pitch_obj.description = pitch.attributes['des']	
-  					pitch_obj.pitch_type = pitch.attributes['type']
-  					pitch_obj.gd_pitch_id = pitch.attributes['id']
-  					pitch_obj.x = pitch.attributes['x']
-  					pitch_obj.y = pitch.attributes['y']
-  					if pitch.attributes['start_speed']
-  						pitch_obj.start_speed = pitch.attributes['start_speed']
-  						pitch_obj.end_speed = pitch.attributes['end_speed']
-  						pitch_obj.sz_top = pitch.attributes['sz_top']
-  						pitch_obj.sz_bot = pitch.attributes['sz_bot']
-  						pitch_obj.pfx_x = pitch.attributes['pfx_x']
-  						pitch_obj.pfx_z = pitch.attributes['pfx_z']
-  						pitch_obj.px = pitch.attributes['px']
-  						pitch_obj.pz = pitch.attributes['pz']
-  						pitch_obj.x0 = pitch.attributes['x0']
-  						pitch_obj.y0 = pitch.attributes['y0']
-  						pitch_obj.z0 = pitch.attributes['z0']
-  						pitch_obj.vx0 = pitch.attributes['vx0']
-  						pitch_obj.vy0 = pitch.attributes['vy0']
-  						pitch_obj.vz0 = pitch.attributes['vz0']
-  						pitch_obj.ax = pitch.attributes['ax']
-  						pitch_obj.ay = pitch.attributes['ay']
-  						pitch_obj.az = pitch.attributes['az']
-  						pitch_obj.break_y = pitch.attributes['break_y']
-  						pitch_obj.break_angle = pitch.attributes['break_angle']
-  						pitch_obj.break_length = pitch.attributes['break_length']
-  						pitch_obj.at_bat_id = at_bat_obj.id
-  					end
+  					pitch_obj = set_pitch_obj_from_pitch(pitch)
+						pitch_obj.at_bat_id = at_bat_obj.id
   					pitch_obj.save
   				end
   			else
-  				#puts "At bat already exists..."	
+  				puts "At bat already exists."	
   			end
   		end	
   	end
+
+    def self.set_at_bat_obj_from_atbat(atbat)
+      at_bat_obj = AtBat.new
+      at_bat_obj.inning = atbat.attributes['inning']
+      at_bat_obj.number = atbat.attributes['num']
+      at_bat_obj.ball = atbat.attributes['b']
+      at_bat_obj.strike = atbat.attributes['s']
+      at_bat_obj.out = atbat.attributes['o']
+      at_bat_obj.batter_gd_id = atbat.attributes['batter']
+      at_bat_obj.pitcher_gd_id = atbat.attributes['pitcher']
+      at_bat_obj.stand = atbat.attributes['stand']
+      at_bat_obj.description = atbat.attributes['des']
+      at_bat_obj.event = atbat.attributes['event']
+      at_bat_obj.brief_event = atbat.attributes['brief_event']
+    end
+
+    def self.set_pitch_obj_from_pitch(pitch)
+      pitch_obj = Pitch.new
+      pitch_obj.at_bat_id = at_bat_obj.id
+      pitch_obj.description = pitch.attributes['des'] 
+      pitch_obj.pitch_type = pitch.attributes['type']
+      pitch_obj.gd_pitch_id = pitch.attributes['id']
+      pitch_obj.x = pitch.attributes['x']
+      pitch_obj.y = pitch.attributes['y']
+      set_advanced_pitch_metrics(pitch_obj, pitch) if pitch.attributes['start_speed']
+    end
+
+    def self.set_advanced_pitch_metrics(pitch_obj, pitch)
+      pitch_obj.start_speed = pitch.attributes['start_speed']
+      pitch_obj.end_speed = pitch.attributes['end_speed']
+      pitch_obj.sz_top = pitch.attributes['sz_top']
+      pitch_obj.sz_bot = pitch.attributes['sz_bot']
+      pitch_obj.pfx_x = pitch.attributes['pfx_x']
+      pitch_obj.pfx_z = pitch.attributes['pfx_z']
+      pitch_obj.px = pitch.attributes['px']
+      pitch_obj.pz = pitch.attributes['pz']
+      pitch_obj.x0 = pitch.attributes['x0']
+      pitch_obj.y0 = pitch.attributes['y0']
+      pitch_obj.z0 = pitch.attributes['z0']
+      pitch_obj.vx0 = pitch.attributes['vx0']
+      pitch_obj.vy0 = pitch.attributes['vy0']
+      pitch_obj.vz0 = pitch.attributes['vz0']
+      pitch_obj.ax = pitch.attributes['ax']
+      pitch_obj.ay = pitch.attributes['ay']
+      pitch_obj.az = pitch.attributes['az']
+      pitch_obj.break_y = pitch.attributes['break_y']
+      pitch_obj.break_angle = pitch.attributes['break_angle']
+      pitch_obj.break_length = pitch.attributes['break_length']
+    end
   end
 end
