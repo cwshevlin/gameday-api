@@ -64,6 +64,7 @@ module GamedayApi
           end
         else
           puts "Could not find game.xml: #{gid}"
+          raise "Could not find game.xml: #{gid}"
         end
       end
     end
