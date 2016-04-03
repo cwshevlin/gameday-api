@@ -244,8 +244,8 @@ module GamedayApi
     #    [1] array of all home players
     def get_rosters
       if !@rosters
-        players = Players.new
-        players.load_from_id(@gid)
+        @players = Players.new
+        @players.load_from_id(@gid)
         @rosters = players.rosters
       end
       @rosters
